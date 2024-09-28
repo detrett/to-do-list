@@ -90,6 +90,7 @@ body {
   min-height: 100vh;
   font-family: 'Lato';
   color: var(--neutralPrimary);
+  background-color: var(--themeLighterAlt);
 }
 
 #sidebar {
@@ -98,9 +99,10 @@ body {
   flex-direction: column;
   gap: 3rem;
 
-  margin: auto;
-  margin-block-start: 10%;
-  width: 80%;
+  padding-inline: 10%;
+  padding-block-start: 10%;
+  width: 100%;
+  min-height: 100vh;
 
   & #welcome-block {
     display: flex;
@@ -126,6 +128,11 @@ body {
       filter: invert(17%) sepia(5%) saturate(234%) hue-rotate(349deg) brightness(96%) contrast(91%);
 
       &:hover {
+        /* Turn icon light orange */
+        filter: invert(50%) sepia(69%) saturate(458%) hue-rotate(324deg) brightness(102%) contrast(84%);
+      }
+
+      &:active {
         /* Turn icon orange */
         filter: invert(34%) sepia(84%) saturate(6250%) hue-rotate(5deg) brightness(90%) contrast(98%);
       }
@@ -160,7 +167,7 @@ body {
           }
         }
 
-        &:hover:not(.active) {
+        &:hover:not(.active), &:focus:not(.active) {
           background-color: var(--themeTertiary);
           color: var(--white);
 
@@ -168,9 +175,21 @@ body {
             /* Turn icon white */
             filter: invert(100%) sepia(88%) saturate(2%) hue-rotate(200deg) brightness(106%) contrast(101%);
           }
-        }
 
-      }
+          &:active {
+            background-color: var(--themePrimary);
+            color: var(--white);
+    
+            &>span.icon {
+              /* Turn icon white */
+              filter: invert(100%) sepia(88%) saturate(2%) hue-rotate(200deg) brightness(106%) contrast(101%);
+            }
+          }
+        }
+        }
+        
+
+      
     }
   }
 
@@ -181,17 +200,38 @@ body {
 }
 
 #main-container {
-  background-color: var(--neutralLight);
+  margin: auto;
+  width: 90%;
+  min-height: 100vh;
+  background-color: var(--themeLighterAlt);
 
   & #header>ul {
     display: grid;
     grid-template-columns: 1fr 2fr 6fr 4fr 4fr 1fr 1fr 1fr;
     align-items: center;
+    font-weight: 600;
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--themeTertiary);
+    padding-block: 50px 30px;
+
+    & li {
+      justify-self: center;
+    }
+
+    & li:first-child {
+      color: var(--themePrimary);
+    }
+  }
+
+  & ul.task-list {
+    display: grid;
+    gap: 0.25rem;
   }
 
   /* Task */
   & li.task {
-    background-color: var(--neutralQuaternaryAlt);
+    background-color: var(--themeLighter);
+    border-top: none;
 
     &.checked {
       text-decoration: line-through;
@@ -205,10 +245,12 @@ body {
       & li {
         display: flex;
         align-items: center;
+        justify-self: center;
+        padding-block: 8px;
 
         &.priority {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
+          display: flex;
+          gap: 1rem;
 
           &.high>span {
             background-image: url(icons/high.svg);
@@ -227,7 +269,22 @@ body {
           display: flex;
           align-items: center;
           border: none;
+          border-radius: 4px;
           background-color: transparent;
+
+          &:hover, &:focus {
+            background-color: var(--themeLight);
+          }
+          &:active {
+            background-color: var(--themeTertiary);
+          }
+
+          & .icon {
+            width: 32px;
+            height: 32px;
+            /* Turn icon gray */
+            filter: invert(17%) sepia(5%) saturate(234%) hue-rotate(349deg) brightness(96%) contrast(91%);
+          }
 
           /* Collapsible button */
           &.collapsible {
@@ -248,8 +305,9 @@ body {
   & div.details-content {
     display: none;
     overflow: hidden;
-    color: white;
-    background-color: #000000;
+    color: var(--neutralPrimary);
+    background-color: var(--neutralLighterAlt);
+    padding: 12px 24px;
   }
 }
 
@@ -260,6 +318,12 @@ body {
   width: 24px;
   height: 24px;
   display: inline-block;
+  /*Make icons scalable*/
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  /*Gray by default*/
+  filter: invert(17%) sepia(5%) saturate(234%) hue-rotate(349deg) brightness(96%) contrast(91%);
 
   &.icon-today {
     background-image: url(icons/today.svg);
@@ -271,6 +335,10 @@ body {
 
   &.icon-task-list {
     background-image: url(icons/task-list.svg);
+  }
+
+  &.icon-done {
+    background-image: url(icons/done.svg);
   }
 
   &.icon-tag {
@@ -288,6 +356,7 @@ body {
 
 /* Checkbox */
 input[type=checkbox] {
+  opacity: 1;
   accent-color: var(--themePrimary);
 }
 
