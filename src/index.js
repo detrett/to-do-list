@@ -15,3 +15,17 @@ coll.forEach((button, index) => {
     }
   });
 });
+
+const checkboxes = document.querySelectorAll(".task-checkbox");
+
+checkboxes.forEach((checkbox) => {
+  checkbox.addEventListener("change", function() {
+    const task = this.closest('.task');
+    
+    if (this.checked) {
+      task.classList.add("checked");
+    } else {
+      task.classList.remove("checked");
+    }
+  });
+});

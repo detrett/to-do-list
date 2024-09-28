@@ -185,7 +185,7 @@ body {
 
   & #header>ul {
     display: grid;
-    grid-template-columns: 2fr 6fr 4fr 4fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 2fr 6fr 4fr 4fr 1fr 1fr 1fr;
     align-items: center;
   }
 
@@ -193,13 +193,35 @@ body {
   & li.task {
     background-color: var(--neutralQuaternaryAlt);
 
-    &>ul {
+    &.checked {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    & ul {
       display: grid;
-      grid-template-columns: 2fr 6fr 4fr 4fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 2fr 6fr 4fr 4fr 1fr 1fr 1fr;
 
       & li {
         display: flex;
         align-items: center;
+
+        &.priority {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+
+          &.high>span {
+            background-image: url(icons/high.svg);
+          }
+
+          &.medium>span {
+            background-image: url(icons/medium.svg);
+          }
+
+          &.low>span {
+            background-image: url(icons/low.svg);
+          }
+        }
 
         & button {
           display: flex;
@@ -209,26 +231,28 @@ body {
 
           /* Collapsible button */
           &.collapsible {
-            > span {
+            >span {
               background-image: url(icons/open.svg);
             }
-            &.active > span {
+
+            &.active>span {
               background-image: url(icons/close.svg);
             }
           }
         }
       }
     }
+  }
 
-    /* Collapsible content */
-    & div.details-content {
-      display: none;
-      overflow: hidden;
-      color: white;
-      background-color: #000000;
-    }
+  /* Collapsible content */
+  & div.details-content {
+    display: none;
+    overflow: hidden;
+    color: white;
+    background-color: #000000;
   }
 }
+
 
 /* Icons */
 
@@ -260,18 +284,11 @@ body {
   &.icon-trash {
     background-image: url(icons/trash.svg);
   }
+}
 
-  &.icon-low {
-    background-image: url(icons/low.svg);
-  }
-
-  &.icon-med {
-    background-image: url(icons/medium.svg);
-  }
-
-  &.icon-high {
-    background-image: url(icons/high.svg);
-  }
+/* Checkbox */
+input[type=checkbox] {
+  accent-color: var(--themePrimary);
 }
 
 .hidden {
