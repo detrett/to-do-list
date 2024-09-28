@@ -223,7 +223,7 @@ body {
     }
   }
 
-  & ul.task-list {
+  & ul#task-list {
     display: grid;
     gap: 0.25rem;
   }
