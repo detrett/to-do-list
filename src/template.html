@@ -1,11 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>To-Do List</title>
 </head>
+
 <body>
-    
+
+    <div id="sidebar">
+        <div id="welcome-block">
+            <a href="https://github.com/detrett/to-do-list" target="_blank" title="Github page">
+                <div class="user-icon"></div>
+            </a>
+            <div>
+                <p>Welcome back,</p>
+                <p>@detrett</p>
+            </div>
+        </div>
+
+        <div id="tasks">
+            <h2>To-Do List</h2>
+            <ul>
+                <li>
+                    <button class="active"><span class="icon icon-today"></span>Today</button>
+                </li>
+                <li>
+                    <button><span class="icon icon-week"></span>This Week</button>
+                </li>
+                <li>
+                    <button><span class="icon icon-task-list"></span>All Tasks</button>
+                </li>
+            </ul>
+        </div>
+
+        <div id="tags">
+            <h2>Tags</h2>
+            <ul>
+                <li><button><span class="no-icon"></span>Gym</button></li>
+                <li><button><span class="no-icon"></span>School</button></li>
+                <li><button><span class="no-icon"></span>Home</button></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="container"></div>
 </body>
+
 </html>
