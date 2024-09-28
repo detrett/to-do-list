@@ -36,6 +36,10 @@ img {
   height: auto;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 /*** Variables ***/
 
 :root {
@@ -128,37 +132,39 @@ body {
     }
   }
 
-  #tasks, #tags {
+  #tasks,
+  #tags {
 
-    & ul > li {
+    & ul>li {
       margin-block-end: 8px;
 
       & button {
         border: none;
         border-radius: 4px;
         padding-block: 8px;
+        padding-inline-start: 12px;
         width: 100%;
         font-size: 1.2rem;
         display: flex;
         align-items: center;
+        gap: 16px;
 
         &.active {
           background-color: var(--themePrimary);
           color: var(--white);
           font-weight: 600;
 
-          & > span.icon {
+          &>span.icon {
             /* Turn icon white */
             filter: invert(100%) sepia(88%) saturate(2%) hue-rotate(200deg) brightness(106%) contrast(101%);
           }
         }
 
         &:hover:not(.active) {
-          cursor: pointer;
           background-color: var(--themeTertiary);
           color: var(--white);
 
-          & > span.icon {
+          &>span.icon {
             /* Turn icon white */
             filter: invert(100%) sepia(88%) saturate(2%) hue-rotate(200deg) brightness(106%) contrast(101%);
           }
@@ -174,8 +180,54 @@ body {
   }
 }
 
-#container {
+#main-container {
   background-color: var(--neutralLight);
+
+  & #header>ul {
+    display: grid;
+    grid-template-columns: 2fr 6fr 4fr 4fr 1fr 1fr 1fr;
+    align-items: center;
+  }
+
+  /* Task */
+  & li.task {
+    background-color: var(--neutralQuaternaryAlt);
+
+    &>ul {
+      display: grid;
+      grid-template-columns: 2fr 6fr 4fr 4fr 1fr 1fr 1fr;
+
+      & li {
+        display: flex;
+        align-items: center;
+
+        & button {
+          display: flex;
+          align-items: center;
+          border: none;
+          background-color: transparent;
+
+          /* Collapsible button */
+          &.collapsible {
+            > span {
+              background-image: url(icons/open.svg);
+            }
+            &.active > span {
+              background-image: url(icons/close.svg);
+            }
+          }
+        }
+      }
+    }
+
+    /* Collapsible content */
+    & div.details-content {
+      display: none;
+      overflow: hidden;
+      color: white;
+      background-color: #000000;
+    }
+  }
 }
 
 /* Icons */
@@ -183,22 +235,45 @@ body {
 .icon {
   width: 24px;
   height: 24px;
-  display: block;
-  margin-inline: 12px 16px;
+  display: inline-block;
+
+  &.icon-today {
+    background-image: url(icons/today.svg);
+  }
+
+  &.icon-week {
+    background-image: url(icons/week.svg);
+  }
+
+  &.icon-task-list {
+    background-image: url(icons/task-list.svg);
+  }
+
+  &.icon-tag {
+    background-image: url(icons/tag.svg);
+  }
+
+  &.icon-edit {
+    background-image: url(icons/edit.svg);
+  }
+
+  &.icon-trash {
+    background-image: url(icons/trash.svg);
+  }
+
+  &.icon-low {
+    background-image: url(icons/low.svg);
+  }
+
+  &.icon-med {
+    background-image: url(icons/medium.svg);
+  }
+
+  &.icon-high {
+    background-image: url(icons/high.svg);
+  }
 }
 
-.icon-today {
-  background-image: url(icons/today.svg);
-}
-
-.icon-week {
-  background-image: url(icons/week.svg);
-}
-
-.icon-task-list {
-  background-image: url(icons/task-list.svg);
-}
-
-.icon-tag {
-  background-image: url(icons/tag.svg);
+.hidden {
+  display: none;
 }

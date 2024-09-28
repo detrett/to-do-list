@@ -24,13 +24,13 @@
             <h2>To-Do List</h2>
             <ul>
                 <li>
-                    <button class="active"><span class="icon icon-today"></span>Today</button>
+                    <button id="today" class="active"><span class="icon icon-today"></span>Today</button>
                 </li>
                 <li>
-                    <button><span class="icon icon-week"></span>This Week</button>
+                    <button id="week"><span class="icon icon-week"></span>This Week</button>
                 </li>
                 <li>
-                    <button><span class="icon icon-task-list"></span>All Tasks</button>
+                    <button id="all-tasks"><span class="icon icon-task-list"></span>All Tasks</button>
                 </li>
             </ul>
         </div>
@@ -45,7 +45,36 @@
         </div>
     </div>
 
-    <div id="container"></div>
+    <div id="main-container">
+        <div id="header">
+            <ul>
+                <li>Tag</li>
+                <li>Title</li>
+                <li>Priority</li>
+                <li>Deadline</li>
+                <li>Details</li>
+                <li>Edit</li>
+                <li>Delete</li>
+            </ul>
+        </div>
+        <ul class="task-list">
+            <li class="task">
+                <ul>
+                    <li class="tag">Gym</li>
+                    <li class="title">Chest day</li>
+                    <li class="priority">High &nbsp;<span class="icon icon-high"></span></li>
+                    <li class="deadline">Today</li>
+                    <li class="details"><button title="Toggle information" class="collapsible" id="collapsible-0"><span
+                                class="icon"></button></li>
+                    <li class="edit"><button title="Edit task"><span class="icon icon-edit"></span></button></li>
+                    <li class="delete"><button title="Delete task"><span class="icon icon-trash"></span></button></li>
+                    
+                </ul>
+                <div class="details-content" id="details-content-0">Hello there</div>
+            </li>
+        </ul>
+
+    </div>
 </body>
 
 </html>
