@@ -35,12 +35,17 @@
                 <li>
                     <button id="done"><span class="icon icon-done"></span>Completed</button>
                 </li>
+
             </ul>
         </div>
 
         <div id="tags">
             <h2>Tags</h2>
-            <ul>
+            <ul id="tag-list">
+                <li>
+                    <button id="newTagBtn" title="Add new tag"><span
+                            class="icon icon-add"></span>New Tag</button>
+                </li>
                 <!-- <li><button id="tag-gym"><span class="icon icon-tag"></span>Gym</button></li>
                 <li><button id="tag-school"><span class="icon icon-tag"></span>School</button></li>
                 <li><button id="tag-home"><span class="icon icon-tag"></span>Home</button></li> -->
@@ -59,7 +64,8 @@
                 <li></li>
                 <li></li>
                 <li>
-                    <button id="new-task-btn" onclick="this.blur()"><span class="icon icon-add"></span></button>
+                    <button id="new-task-btn" onclick="this.blur()" title="Add new task"><span
+                            class="icon icon-add"></span></button>
                 </li>
             </ul>
         </div>
@@ -85,10 +91,65 @@
                 </ul>
                 <div class="details-content" id="details-content-0">Hello there</div>
             </li> -->
-
+            <!-- <li>
+                <div class="edit-content" id="edit-content-0">
+                    <form action="">
+                        <h3>Edit Task</h3>
+                        <input class="input" id="form-title" type="text" placeholder="Title" required minlength="3"
+                                maxlength="100">
+                    </form>
+                </div>
+            </li> -->
         </ul>
 
     </div>
+
+    <div id="tag-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <h2>Add a new tag!</h2>
+                <span class="close-button">&times;</span>
+            </div>
+            <input type="text" id="new-tag-input" placeholder="Enter tag name" />
+            <div class="add-tag-btns">
+                <button id="confirm-add-tag">Add Tag</button>
+                <button id="cancel-add-tag">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Add New Task</h2>
+            <form id="taskForm">
+                <label for="taskTitle">Title:</label>
+                <input type="text" id="taskTitle" required>
+    
+                <label for="taskTag">Tag:</label>
+                <select id="taskTag" required>
+                    <option value="" disabled selected>Select a tag</option>
+                    
+                </select>
+    
+                <label for="taskPriority">Priority:</label>
+                <select id="taskPriority">
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+    
+                <label for="taskDeadline">Deadline:</label>
+                <input type="date" id="taskDeadline" required>
+    
+                <label for="taskDetails">Details:</label>
+                <textarea id="taskDetails" rows="4"></textarea>
+    
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+    </div> -->
+
 </body>
 
 </html>

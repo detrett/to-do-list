@@ -15,11 +15,36 @@ export class Task {
         this.isChecked = !this.isChecked;
     }
 
-    editTask(newTitle, newPriority, newDeadline, newDetails) {
+    editTask(newTitle, newTag, newPriority, newDeadline, newDetails) {
         this.title = newTitle;
+        this.tag = newTag;
         this.priority = newPriority;
         this.deadline = newDeadline;
         this.details = newDetails;
+    
+        // Update the DOM elements
+        const taskElement = document.getElementById(this.id);
+    
+        // Update title
+        const titleElement = taskElement.querySelector('.title');
+        titleElement.textContent = this.title;
+    
+        // Update tag
+        const tagElement = taskElement.querySelector('.tag');
+        tagElement.textContent = this.tag;
+    
+        // Update priority
+        const priorityElement = taskElement.querySelector('.priority');
+        priorityElement.className = `priority ${this.priority.toLowerCase()}`; // Update class based on priority
+        priorityElement.firstChild.textContent = `${this.priority} `; // Update text
+    
+        // Update deadline
+        const deadlineElement = taskElement.querySelector('.deadline');
+        deadlineElement.textContent = this.deadline;
+    
+        // Update details content
+        const detailsContent = taskElement.querySelector('.details-content');
+        detailsContent.textContent = this.details;
     }
 
     // Method to create and return a task element
@@ -130,7 +155,7 @@ export class Task {
     createCollapsibleButton() {
         const listElement = document.createElement("li");
         const collapsible = document.createElement("button");
-        collapsible.title = "Toggle information";
+        collapsible.title = "Toggle details";
         collapsible.classList.add("collapsible");
         collapsible.id = `collapsible-${this.id}`;
         // <button title="Toggle information" class="collapsible" id="collapsible-task-1"></button>
