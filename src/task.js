@@ -24,7 +24,7 @@ export class Task {
 
     }
 
-    renderTask() {
+    renderTaskHTML() {
     return `
       <li class="task" id="${this.id}">
         <ul>

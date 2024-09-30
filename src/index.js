@@ -1,10 +1,13 @@
 import "./styles.css";
 import { Task } from "./task";
+import { ScreenController } from "./screen";
+
+const myScreen = new ScreenController();
 
 const taskList = document.getElementById('task-list');
 const task1 = new Task('task-0', 'Gym', 'Chest day', 'High', 'Today', 'Hello there');
-
-const taskElement = document.createRange().createContextualFragment(task1.renderTask());
+// String -> DOM element
+const taskElement = document.createRange().createContextualFragment(task1.renderTaskHTML());
 
 taskList.appendChild(taskElement);
 
