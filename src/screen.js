@@ -1,5 +1,6 @@
 import { Tab } from "./tab";
 import { Task } from "./task";
+import { Tag } from "./tag";
 
 export class ScreenController {
     constructor() {
@@ -17,17 +18,29 @@ export class ScreenController {
         this.activeTab = null; // Default to 'Today' tab
         this.setActiveTab(this.tabs.today); // Initialize with default active tab
 
+        const taskElement = this.createTask('Gym', 'Back day', 'High', 'Today', 'Hello there');
+        this.taskList.appendChild(taskElement);
+
         // Add event listeners for tab buttons
         Object.values(this.tabs).forEach((tab) => {
             tab.buttonElement.addEventListener("click", () => this.setActiveTab(tab));
         });
 
         // Add event listener to new task button
-        this.newTaskBtn.addEventListener("click", () => { 
+        this.newTaskBtn.addEventListener("click", () => {
             const taskElement = this.createTask('Gym', 'Chest day', 'High', 'Today', 'Hello there');
             this.taskList.appendChild(taskElement);
 
         })
+
+        const tag1 = new Tag("Gym");
+        const tag2 = new Tag("School");
+        const tag3 = new Tag("Home");
+
+        const tagsContainer = document.getElementById("tags").querySelector("ul");
+        tagsContainer.appendChild(tag1.buttonElement);
+        tagsContainer.appendChild(tag2.buttonElement);
+        tagsContainer.appendChild(tag3.buttonElement);
     }
 
     setActiveTab(newTab) {

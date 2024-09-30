@@ -1,13 +1,13 @@
 export class Task {
     static idCounter = 0;
 
-    constructor(tag, title, priority, deadline, details, isChecked = false) {
+    constructor(aTag, aTitle, aPriority, aDeadline, aDetails, isChecked = false) {
         this.id = "task-" + Task.idCounter++; // Automatically assign an ID and increment the counter
-        this.tag = tag;
-        this.title = title;
-        this.priority = priority;
-        this.deadline = deadline;
-        this.details = details;
+        this.tag = aTag;
+        this.title = aTitle;
+        this.priority = aPriority;
+        this.deadline = aDeadline;
+        this.details = aDetails;
         this.isChecked = isChecked;
     }
 
@@ -199,5 +199,5 @@ export class Task {
         taskElement.remove();
         // Implement any other delete logic if needed
     }
-    
+
 }

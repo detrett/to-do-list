@@ -1,6 +1,6 @@
 export class Tab {
-    constructor(buttonElement) {
-        this.buttonElement = buttonElement;
+    constructor(aButtonElement) {
+        this.buttonElement = aButtonElement;
         this.isActive = false;
     }
 
