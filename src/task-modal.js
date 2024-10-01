@@ -1,4 +1,5 @@
 import { Logger } from "./logger";
+import { getToday, formatDate } from "./date";
 
 export class TaskModal {
     constructor() {
@@ -30,10 +31,15 @@ export class TaskModal {
         return document.getElementById("taskDeadline");
     }
 
+    set taskDeadline(newDeadline) {
+        this.taskDeadline.value = newDeadline;
+    }
+
     open = (callback, tags) => {
         this.taskModal.style.display = "block";
         this.callback = callback;
         this.populateTags(tags);
+        this.taskDeadline = getToday();
     }
 
     close = () => {
@@ -54,19 +60,20 @@ export class TaskModal {
             
             // Gather input values
             const title = this.taskTitle.value;
-            const tag = "DEFAULT";
+            const tag = this.taskTag.value;
             const priority = this.taskPriority.value;
             const deadline = this.taskDeadline.value;
             const details = this.taskDetails.value;
 
             // Basic validation
-            if (title && tag && priority && deadline && details) {
-                const [year, month, day] = deadline.split("-");
-                const flippedDate = `${day}-${month}`; // Flip date format
+            if (title && priority && deadline) {
+                // const [year, day, month] = deadline.split("-");
+                // const flippedDate = `${day}-${month}`;
+                const parsedDate = formatDate(new Date(deadline));
 
                 // Call the callback with the values
                 if (typeof this.callback === "function") {
-                    this.callback(tag, title, priority, flippedDate, details);
+                    this.callback(tag, title, priority, parsedDate, details);
                 }
 
                 // Reset form and close the modal
@@ -101,6 +108,15 @@ export class TaskModal {
             option.textContent = tags[tagKey].title; // Display the tag title
             taskTagSelect.appendChild(option); // Add the option to the select
         }
+    }
+
+    formatDate(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+        const day = String(date.getDate()).padStart(2, '0');
+    
+        return `${year}-${month}-${day}`;
     }
 
 }
