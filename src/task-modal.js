@@ -35,11 +35,18 @@ export class TaskModal {
         this.taskDeadline.value = newDeadline;
     }
 
-    open = (callback, tags) => {
+    open = (callback, tags, tag = "", title = "", priority = "", dueDate = "", details = "") => {
         this.taskModal.style.display = "block";
         this.callback = callback;
         this.populateTags(tags);
         this.taskDeadline = getToday();
+
+        // Set the modal values when editing
+        this.taskTag.value = tag || "No tag";
+        this.taskTitle.value = title;
+        this.taskPriority.value = priority || "Low";
+        this.taskDeadline = dueDate || formatDate(getToday());
+        this.taskDetails.value = details;
     }
 
     close = () => {
@@ -57,7 +64,7 @@ export class TaskModal {
     addSubmitEventListener = () => {
         this.taskForm.addEventListener("submit", (e) => {
             e.preventDefault();
-            
+
             // Gather input values
             const title = this.taskTitle.value;
             const tag = this.taskTag.value;
@@ -88,7 +95,7 @@ export class TaskModal {
 
     populateTags(tags) {
         const taskTagSelect = document.getElementById("taskTag");
-        
+
         // Remove options
         while (taskTagSelect.firstChild) {
             taskTagSelect.removeChild(taskTagSelect.firstChild);
@@ -115,7 +122,7 @@ export class TaskModal {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
         const day = String(date.getDate()).padStart(2, '0');
-    
+
         return `${year}-${month}-${day}`;
     }
 

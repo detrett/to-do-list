@@ -3,7 +3,7 @@ import { Logger } from "./logger";
 export class Task {
     static idCounter = 0;
 
-    constructor(aTag = "No tag", aTitle, aPriority, aDeadline, aDetails = "No additional details!", onDelete, isChecked = false) {
+    constructor(aTag = "No tag", aTitle, aPriority, aDeadline, aDetails = "No additional details!", onDelete, onEdit, isChecked = false, isHidden = false) {
         this.logger = new Logger();
         this.id = "task-" + Task.idCounter++; // Automatically assign an ID and increment the counter
         this.tag = aTag;
@@ -13,6 +13,8 @@ export class Task {
         this.details = aDetails;
         this.isChecked = isChecked;
         this.onDelete = onDelete;
+        this.onEdit = onEdit;
+        this.isHidden = isHidden;
     }
 
     info() {
@@ -24,33 +26,37 @@ export class Task {
         this.isChecked = !this.isChecked;
     }
 
-    editTask(newTitle, newTag, newPriority, newDeadline, newDetails) {
+    toggleHide() {
+        this.isHidden = !this.isHidden;
+    }
+
+    renderEdit(newTitle, newTag, newPriority, newDeadline, newDetails) {
         this.title = newTitle;
         this.tag = newTag;
         this.priority = newPriority;
         this.deadline = newDeadline;
         this.details = newDetails;
-    
+
         // Update the DOM elements
         const taskElement = document.getElementById(this.id);
-    
+
         // Update title
         const titleElement = taskElement.querySelector('.title');
         titleElement.textContent = this.title;
-    
+
         // Update tag
         const tagElement = taskElement.querySelector('.tag');
         tagElement.textContent = this.tag;
-    
+
         // Update priority
         const priorityElement = taskElement.querySelector('.priority');
         priorityElement.className = `priority ${this.priority.toLowerCase()}`; // Update class based on priority
         priorityElement.firstChild.textContent = `${this.priority} `; // Update text
-    
+
         // Update deadline
         const deadlineElement = taskElement.querySelector('.deadline');
         deadlineElement.textContent = this.deadline;
-    
+
         // Update details content
         const detailsContent = taskElement.querySelector('.details-content');
         detailsContent.textContent = this.details;
@@ -67,17 +73,17 @@ export class Task {
 
         // Create sub-elements dynamically
         const taskLabel = this.createTaskLabel();
-       
+
         const tagElement = this.createTextElement("li", "tag", this.tag);
         const titleElement = this.createTextElement("li", "title", this.title);
         const priorityElement = this.createPriorityElement();
         const deadlineElement = this.createTextElement("li", "deadline", this.deadline);
-        
-        
+
+
         const collapsibleButton = this.createCollapsibleButton();
         const editButton = this.createIconButton("edit", "Edit task", "icon-edit");
         const deleteButton = this.createIconButton("delete", "Delete task", "icon-trash");
-        
+
         const detailsContent = this.createDetailsContent();
 
         // Create list to wrap these elements
@@ -217,7 +223,10 @@ export class Task {
         // <button title="Edit task"><span class="icon icon-edit"></span></button>
 
         if (type === "edit") {
-            button.addEventListener("click", () => button.blur())
+            button.addEventListener("click", () => {
+                button.blur();
+                this.editTask();
+            })
         }
 
         if (type === "delete") {
@@ -233,6 +242,11 @@ export class Task {
         const taskElement = document.getElementById(this.id);
         taskElement.remove();
         this.onDelete(this.id);
+    }
+
+    editTask() {
+        this.onEdit(this.id, this.tag, this.title, this.priority, this.deadline, this.details);
+
     }
 
 }

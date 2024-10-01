@@ -54,7 +54,8 @@ export class ScreenController {
 
         // TASKS
         this.tasks = {
-            "task-0": this.createTask('Gym', 'Back day', 'High', 'Today', '4 back exercises, 2 biceps exercises. No cardio today.', (id) => this.handleTaskDeletion(id)),
+            "task-0": this.createTask('Gym', 'Back day', 'High', 'Today', '4 back exercises, 2 biceps exercises. No cardio today.', (id) => this.handleTaskDeletion(id),
+        (id, tag, title, priority, dueDate, details) => this.handleTaskModification(id, tag, title, priority, dueDate, details)),
         };
         this.updateTaskList();
 
@@ -65,8 +66,9 @@ export class ScreenController {
             this.newTaskBtn.blur();
 
             // Callback function to retrieve new task and update task list
-            this.taskModal.open((tag, title, priority, flippedDate, details) => {
-                const newTask = new Task(tag, title, priority, flippedDate, details, (id) => this.handleTaskDeletion(id));
+            this.taskModal.open((tag, title, priority, dueDate, details) => {
+                const newTask = new Task(tag, title, priority, dueDate, details, (id) => this.handleTaskDeletion(id), 
+                (id, tag, title, priority, dueDate, details) => this.handleTaskModification(id, tag, title, priority, dueDate, details));
                 newTask.info();
                 this.tasks[newTask.id] = newTask;
 
@@ -130,6 +132,17 @@ export class ScreenController {
         }
     }
 
+    handleTaskModification(id, tag, title, priority, dueDate, details) {
+        const task = this.tasks[id];
+        if (task) {
+            this.taskModal.open((newTag, newTitle, newPriority, newDueDate, newDetails) => {
+                task.renderEdit(newTitle, newTag, newPriority, newDueDate, newDetails);  
+            }, this.tags, tag, title, priority, dueDate, details);
+        } else {
+            console.log(`${id} task not found.`);
+        }
+    }
+
     // Removes all children of an element
     removeChildren(myElement) {
         while (myElement.firstChild) {
@@ -168,8 +181,8 @@ export class ScreenController {
         return this.activeTab;
     }
 
-    createTask(tag, title, priority, deadline, details, onDelete) {
-        return new Task(tag, title, priority, deadline, details, onDelete);
+    createTask(tag, title, priority, deadline, details, onDelete, onEdit) {
+        return new Task(tag, title, priority, deadline, details, onDelete, onEdit);
     }
 
 
