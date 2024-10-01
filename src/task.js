@@ -3,7 +3,7 @@ import { Logger } from "./logger";
 export class Task {
     static idCounter = 0;
 
-    constructor(aTag = " ", aTitle, aPriority, aDeadline, aDetails = "No additional details!", isChecked = false) {
+    constructor(aTag = "No tag", aTitle, aPriority, aDeadline, aDetails = "No additional details!", isChecked = false) {
         this.logger = new Logger();
         this.id = "task-" + Task.idCounter++; // Automatically assign an ID and increment the counter
         this.tag = aTag;

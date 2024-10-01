@@ -30,9 +30,9 @@ export class ScreenController {
 
         // SIDEBAR: TAGS
         this.tags = {
-            gym: new Tag("Gym"),
-            school: new Tag("School"),
-            home: new Tag("Home"),
+            gym: new Tag("Gym", (title) => this.handleTagDeletion(title)),
+            school: new Tag("School", (title) => this.handleTagDeletion(title)),
+            home: new Tag("Home", (title) => this.handleTagDeletion(title)),
         };
         this.updateTagList(); // Initial tag list population
 
@@ -88,6 +88,15 @@ export class ScreenController {
                 this.tagList.appendChild(tag.buttonElement); // Append only new tags
             }
         });
+    }
+
+    handleTagDeletion(title) {
+        if (this.tags[title.toLowerCase()]) {
+            delete this.tags[title.toLowerCase()];
+            console.log(`${title} tag removed.`);
+        } else {
+            console.log(`${title} tag not found.`);
+        }
     }
 
     get taskList() {

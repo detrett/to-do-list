@@ -95,7 +95,7 @@ export class TaskModal {
         }
 
         const defaultOption = document.createElement("option");
-        defaultOption.value = "";
+        defaultOption.value = "No tag";
         defaultOption.textContent = "No tag";
         defaultOption.disabled;
         defaultOption.selected;
