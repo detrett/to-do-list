@@ -3,7 +3,7 @@ import { Logger } from "./logger";
 export class Task {
     static idCounter = 0;
 
-    constructor(aTag = "No tag", aTitle, aPriority, aDeadline, aDetails = "No additional details!", isChecked = false) {
+    constructor(aTag = "No tag", aTitle, aPriority, aDeadline, aDetails = "No additional details!", onDelete, isChecked = false) {
         this.logger = new Logger();
         this.id = "task-" + Task.idCounter++; // Automatically assign an ID and increment the counter
         this.tag = aTag;
@@ -12,6 +12,7 @@ export class Task {
         this.deadline = aDeadline;
         this.details = aDetails;
         this.isChecked = isChecked;
+        this.onDelete = onDelete;
     }
 
     info() {
@@ -231,7 +232,7 @@ export class Task {
     deleteTask() {
         const taskElement = document.getElementById(this.id);
         taskElement.remove();
-        // Implement any other delete logic if needed
+        this.onDelete(this.id);
     }
 
 }

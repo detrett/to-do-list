@@ -44,7 +44,7 @@ export class ScreenController {
             // Callback function to retrieve input and update tag list
             this.tagModal.open((newTagName) => {
                 this.logger.logInfo(newTagName + " tag added", "darkgreen");
-                const newTag = new Tag(newTagName);
+                const newTag = new Tag(newTagName, (title) => this.handleTagDeletion(title));
                 this.tags[newTagName.toLowerCase()] = newTag;
 
                 this.updateTagList();
@@ -54,7 +54,7 @@ export class ScreenController {
 
         // TASKS
         this.tasks = {
-            0: this.createTask('Gym', 'Back day', 'High', 'Today', '4 back exercises, 2 biceps exercises. No cardio today.'),
+            "task-0": this.createTask('Gym', 'Back day', 'High', 'Today', '4 back exercises, 2 biceps exercises. No cardio today.', (id) => this.handleTaskDeletion(id)),
         };
         this.updateTaskList();
 
@@ -66,7 +66,7 @@ export class ScreenController {
 
             // Callback function to retrieve new task and update task list
             this.taskModal.open((tag, title, priority, flippedDate, details) => {
-                const newTask = new Task(tag, title, priority, flippedDate, details);
+                const newTask = new Task(tag, title, priority, flippedDate, details, (id) => this.handleTaskDeletion(id));
                 newTask.info();
                 this.tasks[newTask.id] = newTask;
 
@@ -107,9 +107,9 @@ export class ScreenController {
     updateTaskList() {
         // Collect existing task IDs in the DOM
         const existingTaskIds = new Set(Array.from(this.taskList.children).map(taskEl => taskEl.dataset.taskId));
-        
+
         console.log("Existing DOM task IDs:", [...existingTaskIds]); // Log existing IDs
-    
+
         // Iterate over tasks in the controller
         Object.values(this.tasks).forEach(task => {
             console.log("Checking task ID:", task.id); // Log the task ID being checked
@@ -119,6 +119,15 @@ export class ScreenController {
                 this.taskList.appendChild(task.createTaskElement());
             }
         });
+    }
+
+    handleTaskDeletion(id) {
+        if (this.tasks[id]) {
+            delete this.tasks[id];
+            console.log(`${id} tag removed.`);
+        } else {
+            console.log(`${id} tag not found.`);
+        }
     }
 
     // Removes all children of an element
@@ -159,8 +168,8 @@ export class ScreenController {
         return this.activeTab;
     }
 
-    createTask(tag, title, priority, deadline, details) {
-        return new Task(tag, title, priority, deadline, details);
+    createTask(tag, title, priority, deadline, details, onDelete) {
+        return new Task(tag, title, priority, deadline, details, onDelete);
     }
 
 
