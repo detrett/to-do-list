@@ -1,7 +1,10 @@
+import { Logger } from "./logger";
+
 export class Task {
     static idCounter = 0;
 
-    constructor(aTag, aTitle, aPriority, aDeadline, aDetails, isChecked = false) {
+    constructor(aTag = " ", aTitle, aPriority, aDeadline, aDetails, isChecked = false) {
+        this.logger = new Logger();
         this.id = "task-" + Task.idCounter++; // Automatically assign an ID and increment the counter
         this.tag = aTag;
         this.title = aTitle;
@@ -9,6 +12,11 @@ export class Task {
         this.deadline = aDeadline;
         this.details = aDetails;
         this.isChecked = isChecked;
+    }
+
+    info() {
+        this.logger.logInfo(`Id: ${this.id}, tag: ${this.tag}, title: ${this.title}, priority: ${this.priority},
+        due date: ${this.deadline}, details: ${this.details}`, "brown")
     }
 
     toggleCheck() {
@@ -53,6 +61,7 @@ export class Task {
         const taskElement = document.createElement("li");
         taskElement.classList.add("task");
         taskElement.id = this.id;
+        taskElement.dataset.taskId = this.id;
         // <li class="task" id="task-1"></li>
 
         // Create sub-elements dynamically

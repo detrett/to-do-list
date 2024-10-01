@@ -43,8 +43,7 @@
             <h2>Tags</h2>
             <ul id="tag-list">
                 <li>
-                    <button id="newTagBtn" title="Add new tag"><span
-                            class="icon icon-add"></span>New Tag</button>
+                    <button id="newTagBtn" title="Add new tag"><span class="icon icon-add"></span>New Tag</button>
                 </li>
                 <!-- <li><button id="tag-gym"><span class="icon icon-tag"></span>Gym</button></li>
                 <li><button id="tag-school"><span class="icon icon-tag"></span>School</button></li>
@@ -105,10 +104,10 @@
     </div>
 
     <div id="tag-modal" class="modal">
-        <div class="modal-content">
+        <div id="tag-main" class="modal-content">
             <div class="modal-title">
                 <h2>Add a new tag!</h2>
-                <span class="close-button">&times;</span>
+                <span id="tag-close-button">&times;</span>
             </div>
             <input type="text" id="new-tag-input" placeholder="Enter tag name" />
             <div class="add-tag-btns">
@@ -118,37 +117,41 @@
         </div>
     </div>
 
-    <!-- <div id="taskModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Add New Task</h2>
+    <div id="task-modal" class="modal">
+        <div id="task-main" class="modal-content">
+            <div class="modal-title">
+                <h2>Add New Task</h2>
+                <span id="task-close-button">&times;</span>
+            </div>
             <form id="taskForm">
-                <label for="taskTitle">Title:</label>
-                <input type="text" id="taskTitle" required>
-    
-                <label for="taskTag">Tag:</label>
-                <select id="taskTag" required>
-                    <option value="" disabled selected>Select a tag</option>
+                <input type="text" id="taskTitle" placeholder="Title: Chest day" required>
+
+                <textarea id="taskDetails" rows="6"
+                    placeholder="Details: 4 chest exercises, 3 shoulder exercises. No cardio."></textarea>
+
+                <div class="select-input">
+                    <div>
+                        <label for="taskTag">Tag:</label>
+                        <select id="taskTag">
+                            <option value="" disabled selected>Select a tag</option>
+                        </select>
+                        <label for="taskPriority">*Priority:</label>
+                        <select id="taskPriority">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                        <label for="taskDeadline">*Due date:</label>
+                        <input type="date" id="taskDeadline" required>
+                    </div>
                     
-                </select>
-    
-                <label for="taskPriority">Priority:</label>
-                <select id="taskPriority">
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                </select>
-    
-                <label for="taskDeadline">Deadline:</label>
-                <input type="date" id="taskDeadline" required>
-    
-                <label for="taskDetails">Details:</label>
-                <textarea id="taskDetails" rows="4"></textarea>
-    
-                <button type="submit">Add Task</button>
+                    <button type="submit" id="confirm-add-task">Add Task</button>
+                </div>
+
+                
             </form>
         </div>
-    </div> -->
+    </div>
 
 </body>
 

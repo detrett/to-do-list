@@ -5,6 +5,10 @@ export class Tag {
         this.buttonElement = this.createTagButton(aTitle);
     }
 
+    info() {
+        return `Tag title: ${this.title}`
+    }
+
     // Method to create the tag button element
     createTagButton(title) {
         // Create the button element

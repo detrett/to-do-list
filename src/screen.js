@@ -1,73 +1,137 @@
+import { Logger } from "./logger";
 import { Tab } from "./tab";
 import { Task } from "./task";
 import { Tag } from "./tag";
+import { TagModal } from "./tag-modal";
+import { TaskModal } from "./task-modal";
 
 export class ScreenController {
     constructor() {
+
+        // LOGGER
+        this.logger = new Logger();
+
+        // SIDEBAR: TABS
         this.tabs = {
             today: new Tab(document.getElementById("today")),
             week: new Tab(document.getElementById("week")),
             allTasks: new Tab(document.getElementById("all-tasks")),
             done: new Tab(document.getElementById("done")),
         };
+        this.activeTab = null;
+        this.setActiveTab(this.tabs.today); // Set 'Today' as the default active tab
+        Object.values(this.tabs).forEach((tab) => { // Add event listeners for tab buttons
+            tab.buttonElement.addEventListener("click", () => {
+                this.setActiveTab(tab)
+                // Filter function
+                // Display function
+            });
+        });
+
+        // SIDEBAR: TAGS
         this.tags = {
             gym: new Tag("Gym"),
             school: new Tag("School"),
             home: new Tag("Home"),
-        }
+        };
+        this.updateTagList(); // Initial tag list population
 
-        this.activeTab = null; // Default to 'Today' tab
-        this.setActiveTab(this.tabs.today); // Initialize with default active tab
-        // Add event listeners for tab buttons
-        Object.values(this.tabs).forEach((tab) => {
-            tab.buttonElement.addEventListener("click", () => this.setActiveTab(tab));
-        });
-
-        this.newTaskBtn = document.getElementById("new-task-btn");
-        this.taskList = document.getElementById('task-list');
-        // Add event listener to new task button
-        this.newTaskBtn.addEventListener("click", () => {
-            const newTask = this.createTask('Gym', 'Chest day', 'High', 'Today', 'Hello there');
-            this.taskList.appendChild(newTask.createTaskElement());
-
-        });
-        const myTask = this.createTask('Gym', 'Back day', 'High', 'Today', 'Hello there');
-        this.taskList.appendChild(myTask.createTaskElement());
-
-        this.newTagBtn = document.getElementById("newTagBtn");
+        // MODAL: TAGS
+        this.tagModal = new TagModal();
+        this.newTagBtn = document.getElementById("newTagBtn"); // New tag button
         this.newTagBtn.addEventListener("click", () => {
             this.newTagBtn.blur();
-            this.newTagInput.value = ''; // Clear input
-            this.tagModal.style.display = "block"; // Show modal
+            // Callback function to retrieve input and update tag list
+            this.tagModal.open((newTagName) => {
+                this.logger.logInfo(newTagName + " tag added", "darkgreen");
+                const newTag = new Tag(newTagName);
+                this.tags[newTagName.toLowerCase()] = newTag;
+
+                this.updateTagList();
+
+            });
         })
 
-        this.tagsContainer = document.getElementById("tag-list");
+        // TASKS
+        this.tasks = {
+            0: this.createTask('Gym', 'Back day', 'High', 'Today', '4 back exercises, 2 biceps exercises. No cardio today.'),
+        };
+        this.updateTaskList();
+
+        // MODAL: TASKS
+        this.taskModal = new TaskModal();
+        this.newTaskBtn = document.getElementById("new-task-btn");
+        this.newTaskBtn.addEventListener("click", () => {
+            this.newTaskBtn.blur();
+
+            // Callback function to retrieve new task and update task list
+            this.taskModal.open((tag, title, priority, flippedDate, details) => {
+                const newTask = new Task(tag, title, priority, flippedDate, details);
+                newTask.info();
+                this.tasks[newTask.id] = newTask;
+
+                this.updateTaskList();
+            }, this.tags);
+        })
+
+    }
+
+    get tagList() {
+        return document.getElementById("tag-list");
+    }
+
+    // SIDEBAR: TAG UPDATER
+    updateTagList() {
         Object.values(this.tags).forEach((tag) => {
-            this.tagsContainer.append(tag.buttonElement);
-        })
-
-        // Modal elements
-        this.tagModal = document.getElementById("tag-modal");
-        this.newTagInput = document.getElementById("new-tag-input");
-        this.confirmAddTagBtn = document.getElementById("confirm-add-tag");
-        this.cancelAddTagBtn = document.getElementById("cancel-add-tag");
-        this.closeModalBtn = document.querySelector(".close-button");
-
-        // Close modal when clicking on cancel or close button
-        this.cancelAddTagBtn.addEventListener("click", this.closeModal.bind(this));
-        this.closeModalBtn.addEventListener("click", this.closeModal.bind(this));
-
-        this.confirmAddTagBtn.addEventListener("click", () => {
-            const tagName = this.newTagInput.value.trim();
-            if (tagName) {
-                this.createTag(tagName); // Add new tag
+            // Check if the tag is already in the list to avoid duplicates
+            if (!this.tagList.querySelector(`#${tag.parseTitleToId(tag.title)}`)) {
+                this.tagList.appendChild(tag.buttonElement); // Append only new tags
             }
         });
     }
 
-    closeModal() {
-        this.tagModal.style.display = "none"; // Hide modal
+    get taskList() {
+        return document.getElementById('task-list');
     }
+
+    // TASK LIST UPDATER
+    updateTaskList() {
+        // Collect existing task IDs in the DOM
+        const existingTaskIds = new Set(Array.from(this.taskList.children).map(taskEl => taskEl.dataset.taskId));
+        
+        console.log("Existing DOM task IDs:", [...existingTaskIds]); // Log existing IDs
+    
+        // Iterate over tasks in the controller
+        Object.values(this.tasks).forEach(task => {
+            console.log("Checking task ID:", task.id); // Log the task ID being checked
+            if (!existingTaskIds.has(task.id.toString())) {
+                // Only append tasks that are not in the DOM yet
+                console.log("Adding task ID:", task.id);
+                this.taskList.appendChild(task.createTaskElement());
+            }
+        });
+    }
+
+    // Removes all children of an element
+    removeChildren(myElement) {
+        while (myElement.firstChild) {
+            myElement.removeChild(myElement.firstChild);
+        }
+    }
+
+    populateTagsSelect() {
+        const taskTagSelect = document.getElementById("taskTag");
+
+        // Add options for each tag available in this.tags
+        for (const tagKey in this.tags) {
+            const option = document.createElement("option");
+            option.value = this.tags[tagKey].title; // Set the value to the tag title
+            option.textContent = this.tags[tagKey].title; // Display the tag title
+            taskTagSelect.appendChild(option); // Add the option to the select
+        }
+    }
+
+
 
     setActiveTab(newTab) {
         if (this.activeTab !== newTab) {
@@ -90,9 +154,5 @@ export class ScreenController {
         return new Task(tag, title, priority, deadline, details);
     }
 
-    createTag(tagName) {
-        const newTag = new Tag(tagName); // Create new tag instance
-        this.tagsContainer.appendChild(newTag.buttonElement); // Add to tags list
-        this.closeModal(); // Close the modal
-    }
+
 }
