@@ -23,8 +23,23 @@ export class ScreenController {
         Object.values(this.tabs).forEach((tab) => { // Add event listeners for tab buttons
             tab.buttonElement.addEventListener("click", () => {
                 this.setActiveTab(tab)
-                // Filter function
-                // Display function
+                
+                switch (tab.buttonElement.id) {
+                    case 'today':
+                        this.filterTasks('today');
+                        break;
+                    case 'week':
+                        this.filterTasks('week');
+                        break;
+                    case 'all-tasks':
+                        this.filterTasks('all-tasks');
+                        break;
+                    case 'done':
+                        this.filterTasks('done');
+                        break;
+                    default:
+                        this.filterTasks('all-tasks');
+                }
             });
         });
 
@@ -34,6 +49,7 @@ export class ScreenController {
             school: new Tag("School", (title) => this.handleTagDeletion(title)),
             home: new Tag("Home", (title) => this.handleTagDeletion(title)),
         };
+        
         this.updateTagList(); // Initial tag list population
 
         // MODAL: TAGS
@@ -54,7 +70,7 @@ export class ScreenController {
 
         // TASKS
         this.tasks = {
-            "task-0": this.createTask('Gym', 'Back day', 'High', 'Today', '4 back exercises, 2 biceps exercises. No cardio today.', (id) => this.handleTaskDeletion(id),
+            "task-0": this.createTask('Gym', 'Back day', 'High', 'October 5th, 2024', '4 back exercises, 2 biceps exercises. No cardio today.', (id) => this.handleTaskDeletion(id),
         (id, tag, title, priority, dueDate, details) => this.handleTaskModification(id, tag, title, priority, dueDate, details)),
         };
         this.updateTaskList();
@@ -150,20 +166,6 @@ export class ScreenController {
         }
     }
 
-    populateTagsSelect() {
-        const taskTagSelect = document.getElementById("taskTag");
-
-        // Add options for each tag available in this.tags
-        for (const tagKey in this.tags) {
-            const option = document.createElement("option");
-            option.value = this.tags[tagKey].title; // Set the value to the tag title
-            option.textContent = this.tags[tagKey].title; // Display the tag title
-            taskTagSelect.appendChild(option); // Add the option to the select
-        }
-    }
-
-
-
     setActiveTab(newTab) {
         if (this.activeTab !== newTab) {
             // Deactivate current active tab
@@ -185,5 +187,36 @@ export class ScreenController {
         return new Task(tag, title, priority, deadline, details, onDelete, onEdit);
     }
 
+    filterTasks() {
+        const today = new Date();
+        const weekFromNow = new Date();
+        weekFromNow.setDate(today.getDate() + 7); // Set the date to 7 days from today
+    
+        Object.values(this.tasks).forEach(task => {
+            const taskDeadline = task.convertDeadlineToDate(); // Convert the string to a Date object
+    
+            if (this.activeTab === this.tabs.today) {
+                const isToday = taskDeadline.toDateString() === today.toDateString();
+                task.setHide(!isToday); // Hide tasks that aren't due today
+            }
+    
+            if (this.activeTab === this.tabs.week) {
+                const isThisWeek = taskDeadline >= today && taskDeadline <= weekFromNow;
+                task.setHide(!isThisWeek); // Hide tasks that aren't due this week
+            }
+    
+            if (this.activeTab === this.tabs.allTasks) {
+                task.setHide(false); // Show all tasks
+            }
+    
+            if (this.activeTab === this.tabs.done) {
+                task.setHide(!task.isChecked); // Show only completed tasks
+            }
+        });
+
+        
+    }
+
+    
 
 }

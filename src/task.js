@@ -26,8 +26,26 @@ export class Task {
         this.isChecked = !this.isChecked;
     }
 
-    toggleHide() {
-        this.isHidden = !this.isHidden;
+    updateVisibility() {
+        const taskElement = document.getElementById(this.id);
+        if (this.isHidden) {
+            taskElement.classList.add("hide");
+        } else {
+            taskElement.classList.remove("hide");
+        }
+    }
+
+    setHide(isHidden) {
+        this.isHidden = isHidden;
+        this.updateVisibility();
+    }
+
+    convertDeadlineToDate() {
+        // Remove ordinal suffix (st, nd, rd, th) from the day part of the string
+        const cleanedDeadline = this.deadline.replace(/(\d+)(st|nd|rd|th)/, '$1');
+
+        // Convert the cleaned string into a Date object
+        return new Date(cleanedDeadline);
     }
 
     renderEdit(newTitle, newTag, newPriority, newDeadline, newDetails) {
