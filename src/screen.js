@@ -23,7 +23,7 @@ export class ScreenController {
         Object.values(this.tabs).forEach((tab) => { // Add event listeners for tab buttons
             tab.buttonElement.addEventListener("click", () => {
                 this.setActiveTab(tab)
-                
+
                 switch (tab.buttonElement.id) {
                     case 'today':
                         this.filterTasks('today');
@@ -49,7 +49,7 @@ export class ScreenController {
             school: new Tag("School", (title) => this.handleTagDeletion(title)),
             home: new Tag("Home", (title) => this.handleTagDeletion(title)),
         };
-        
+
         this.updateTagList(); // Initial tag list population
 
         // MODAL: TAGS
@@ -62,6 +62,7 @@ export class ScreenController {
                 this.logger.logInfo(newTagName + " tag added", "darkgreen");
                 const newTag = new Tag(newTagName, (title) => this.handleTagDeletion(title));
                 this.tags[newTagName.toLowerCase()] = newTag;
+                this.saveTags(this.tags);
 
                 this.updateTagList();
 
@@ -71,7 +72,7 @@ export class ScreenController {
         // TASKS
         this.tasks = {
             "task-0": this.createTask('Gym', 'Back day', 'High', 'October 5th, 2024', '4 back exercises, 2 biceps exercises. No cardio today.', (id) => this.handleTaskDeletion(id),
-        (id, tag, title, priority, dueDate, details) => this.handleTaskModification(id, tag, title, priority, dueDate, details)),
+                (id, tag, title, priority, dueDate, details) => this.handleTaskModification(id, tag, title, priority, dueDate, details)),
         };
         this.updateTaskList();
 
@@ -83,10 +84,11 @@ export class ScreenController {
 
             // Callback function to retrieve new task and update task list
             this.taskModal.open((tag, title, priority, dueDate, details) => {
-                const newTask = new Task(tag, title, priority, dueDate, details, (id) => this.handleTaskDeletion(id), 
-                (id, tag, title, priority, dueDate, details) => this.handleTaskModification(id, tag, title, priority, dueDate, details));
+                const newTask = new Task(tag, title, priority, dueDate, details, (id) => this.handleTaskDeletion(id),
+                    (id, tag, title, priority, dueDate, details) => this.handleTaskModification(id, tag, title, priority, dueDate, details));
                 newTask.info();
                 this.tasks[newTask.id] = newTask;
+                this.saveTasks(this.tasks);
 
                 this.updateTaskList();
             }, this.tags);
@@ -111,6 +113,7 @@ export class ScreenController {
     handleTagDeletion(title) {
         if (this.tags[title.toLowerCase()]) {
             delete this.tags[title.toLowerCase()];
+            this.saveTags(this.tags);
             console.log(`${title} tag removed.`);
         } else {
             console.log(`${title} tag not found.`);
@@ -142,6 +145,7 @@ export class ScreenController {
     handleTaskDeletion(id) {
         if (this.tasks[id]) {
             delete this.tasks[id];
+            this.saveTasks(this.tasks);
             console.log(`${id} tag removed.`);
         } else {
             console.log(`${id} tag not found.`);
@@ -152,7 +156,7 @@ export class ScreenController {
         const task = this.tasks[id];
         if (task) {
             this.taskModal.open((newTag, newTitle, newPriority, newDueDate, newDetails) => {
-                task.renderEdit(newTitle, newTag, newPriority, newDueDate, newDetails);  
+                task.renderEdit(newTitle, newTag, newPriority, newDueDate, newDetails);
             }, this.tags, tag, title, priority, dueDate, details);
         } else {
             console.log(`${id} task not found.`);
@@ -191,32 +195,87 @@ export class ScreenController {
         const today = new Date();
         const weekFromNow = new Date();
         weekFromNow.setDate(today.getDate() + 7); // Set the date to 7 days from today
-    
+
         Object.values(this.tasks).forEach(task => {
             const taskDeadline = task.convertDeadlineToDate(); // Convert the string to a Date object
-    
+
             if (this.activeTab === this.tabs.today) {
                 const isToday = taskDeadline.toDateString() === today.toDateString();
                 task.setHide(!isToday); // Hide tasks that aren't due today
             }
-    
+
             if (this.activeTab === this.tabs.week) {
                 const isThisWeek = taskDeadline >= today && taskDeadline <= weekFromNow;
                 task.setHide(!isThisWeek); // Hide tasks that aren't due this week
             }
-    
+
             if (this.activeTab === this.tabs.allTasks) {
                 task.setHide(false); // Show all tasks
             }
-    
+
             if (this.activeTab === this.tabs.done) {
                 task.setHide(!task.isChecked); // Show only completed tasks
             }
         });
 
-        
+
     }
 
-    
+
+    // Save tags to localStorage
+    saveTags(tags) {
+        const tagsData = Object.values(tags).map(tag => ({
+            id: tag.id,
+            title: tag.title,
+            isSelected: tag.isSelected
+        }));
+        localStorage.setItem('tags', JSON.stringify(tagsData));
+    }
+
+    // Save tasks to localStorage
+    saveTasks(tasks) {
+        const tasksData = Object.values(tasks).map(task => ({
+            tag: task.tag,
+            title: task.title,
+            priority: task.priority,
+            dueDate: task.deadline,
+            details: task.details
+        }));
+        localStorage.setItem('tasks', JSON.stringify(tasksData));
+    }
+
+
+    // Load tags from localStorage
+    loadTags() {
+        const tagsData = JSON.parse(localStorage.getItem('tags')) || [];
+        const tags = {};
+        tagsData.forEach(tagData => {
+            const tag = new Tag(tagData.title, (title) => this.handleTagDeletion(tagData.title));
+            tag.setSelected(tagData.isSelected);
+            tags[tag.title.toLowerCase()] = tag;
+        });
+        return tags;
+    }
+
+    // Load tasks from localStorage
+    loadTasks() {
+        const tasksData = JSON.parse(localStorage.getItem('tasks')) || [];
+        const tasks = {};
+        tasksData.forEach(taskData => {
+            const task = new Task(
+                taskData.tag,
+                taskData.title,
+                taskData.priority,
+                taskData.deadline,
+                taskData.details,
+                (id) => this.handleTaskDeletion(id),
+                (id, tag, title, priority, dueDate, details) => this.handleTaskModification(id, tag, title, priority, dueDate, details),
+            );
+            tasks[task.id] = task;
+        });
+        return tasks;
+    }
+
+
 
 }
